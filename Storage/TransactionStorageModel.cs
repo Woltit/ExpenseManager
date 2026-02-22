@@ -6,7 +6,7 @@ namespace Storage
 {
     public class TransactionStorageModel
     {
-        public Guid id { get; }
+        public Guid Id { get; }
 
         public Guid WalletId { get; }
 
@@ -18,7 +18,7 @@ namespace Storage
 
         public TransactionStorageModel(Guid id, Guid walletId, decimal amount, ExpenseCategory category,string description  , DateTime date)
         {
-            this.id = id;
+            this.Id = id;
             this.WalletId = walletId;
             this.Amount = amount;
             this.Category = category;
