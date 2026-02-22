@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Storage
 {
-    public class TransactionModelStorage
+    public class TransactionStorageModel
     {
         public Guid id { get; }
 
@@ -13,9 +13,10 @@ namespace Storage
 
         public decimal Amount { get; set; }
         public ExpenseCategory Category { get; set; }
+        public string Description { get; set; }
         public DateTime Date { get; set; }
 
-        public TransactionModelStorage(Guid id, Guid walletId, decimal amount, ExpenseCategory category, DateTime date)
+        public TransactionStorageModel(Guid id, Guid walletId, decimal amount, ExpenseCategory category,string description  , DateTime date)
         {
             this.id = id;
             this.WalletId = walletId;
