@@ -22,6 +22,7 @@ namespace Storage
             this.WalletId = walletId;
             this.Amount = amount;
             this.Category = category;
+            this.Description = description;
             this.Date = date;
         }
     }
