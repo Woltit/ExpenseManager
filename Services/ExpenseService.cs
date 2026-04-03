@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Services
 {
-    public class ExpenseService
+    public class ExpenseService : IExpenseService
     {
 
         public List<WalletModel> GetAllWallets()
