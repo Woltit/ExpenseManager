@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ExpenseManager.MAUI.WalletDetailsPage"
+             Title="{Binding Name}">
+
+    <Grid Padding="20" RowDefinitions="Auto, Auto, Auto, Auto, *">
+
+        <Label Grid.Row="0" Text="{Binding TotalAmount, StringFormat='Поточний баланс: {0}'}" FontSize="22" FontAttributes="Bold" TextColor="DarkGreen" Margin="0,0,0,5" />
+        <Label Grid.Row="1" Text="{Binding Currency, StringFormat='Валюта: {0}'}" FontSize="16" />
+
+        <BoxView Grid.Row="2" HeightRequest="1" Color="LightGray" Margin="0,15" />
+
+        <Label Grid.Row="3" Text="Історія транзакцій:" FontSize="18" FontAttributes="Bold" Margin="0,0,0,15" />
+
+        <CollectionView Grid.Row="4"
+                        x:Name="TransactionsCollection" 
+                        ItemsSource="{Binding Transactions}"
+                        SelectionMode="Single"
+                        SelectionChanged="OnTransactionSelected">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,0,0,10" Padding="15" BackgroundColor="#FAFAFA" Stroke="LightGray" StrokeThickness="1">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Category}" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                            <Label Text="{Binding Amount, StringFormat='Сума: {0}'}" FontSize="14" TextColor="#333333" />
+                            <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" FontSize="12" TextColor="Gray"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <Label Text="Транзакцій поки немає." FontAttributes="Italic" HorizontalOptions="Center" Margin="20"/>
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </Grid>
+</ContentPage>

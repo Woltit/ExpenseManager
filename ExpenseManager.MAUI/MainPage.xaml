@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ExpenseManager.MAUI.MainPage"
+             Title="Мої Гаманці">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+        <Label Text="Оберіть гаманець:" FontSize="18" FontAttributes="Bold" />
+
+        <CollectionView x:Name="WalletsCollection" 
+                        SelectionMode="Single" 
+                        SelectionChanged="OnWalletSelected">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,0,0,10" 
+            Padding="15" 
+            BackgroundColor="#F3F3F3" 
+            Stroke="LightGray" 
+            StrokeThickness="1">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="8" />
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                            <Label Text="{Binding TotalAmount, StringFormat='Баланс: {0}'}" FontSize="14" TextColor="DarkSlateGray"/>
+                            <Label Text="{Binding Currency, StringFormat='Валюта: {0}'}" FontSize="14" TextColor="Gray"/>
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
