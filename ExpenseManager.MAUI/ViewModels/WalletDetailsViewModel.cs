@@ -24,7 +24,7 @@ namespace MAUI.ViewModels
             {
                 if (selectedTx == null) return;
 
-                var txDetails = _expenseService.GetTransactionDetails(selectedTx.Id);
+                var txDetails = await _expenseService.GetTransactionDetailsAsync(selectedTx.Id);
 
                 var txViewModel = new TransactionDetailsViewModel(txDetails);
                 await Application.Current.MainPage.Navigation.PushAsync(new TransactionDetailsPage(txViewModel));

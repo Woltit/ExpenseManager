@@ -1,14 +1,23 @@
 ﻿using Microsoft.Maui.Controls;
-using ExpenseManager.MAUI.ViewModels;
+using MAUI.ViewModels;
 
 namespace ExpenseManager.MAUI
 {
     public partial class MainPage : ContentPage
     {
+        private readonly MainViewModel _viewModel;
+
         public MainPage(MainViewModel viewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel; 
+            _viewModel = viewModel;
+            BindingContext = _viewModel;
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            await _viewModel.LoadDataAsync();
         }
     }
 }

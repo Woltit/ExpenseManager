@@ -1,4 +1,4 @@
-﻿using ExpenseManager.MAUI.ViewModels;     
+﻿using MAUI.ViewModels;     
 using Services;
 using Storage;
 using Storage.Repositories; 

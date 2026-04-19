@@ -1,5 +1,6 @@
 ﻿using Models.DTOs;
-using Storage.Repositories; 
+using Storage;
+using Storage.Repositories;
 
 
 namespace Services
@@ -13,15 +14,14 @@ namespace Services
             _repository = repository;
         }
 
-        public List<WalletListDto> GetAllWallets()
+        public async Task<List<WalletListDto>> GetAllWalletsAsync()
         {
-            var dbWallets = _repository.GetAllWallets();
+            var dbWallets = await _repository.GetAllWalletsAsync();
             var dtoList = new List<WalletListDto>();
 
             foreach (var w in dbWallets)
             {
-                var transactions = _repository.GetTransactionsByWalletId(w.Id);
-
+                var transactions = await _repository.GetTransactionsByWalletIdAsync(w.Id);
                 dtoList.Add(new WalletListDto
                 {
                     Id = w.Id,
@@ -33,24 +33,19 @@ namespace Services
             return dtoList;
         }
 
-        public WalletDetailDto GetWalletDetails(Guid walletId)
+        public async Task<WalletDetailDto> GetWalletDetailsAsync(Guid walletId)
         {
-            var dbWallet = _repository.GetAllWallets().FirstOrDefault(w => w.Id == walletId);
+            var dbWallet = await _repository.GetWalletByIdAsync(walletId);
             if (dbWallet == null) return null;
 
-            var dbTransactions = _repository.GetTransactionsByWalletId(walletId);
-            var transactionDtos = new List<TransactionListDto>();
-
-            foreach (var t in dbTransactions)
+            var dbTransactions = await _repository.GetTransactionsByWalletIdAsync(walletId);
+            var transactionDtos = dbTransactions.Select(t => new TransactionListDto
             {
-                transactionDtos.Add(new TransactionListDto
-                {
-                    Id = t.Id,
-                    Amount = t.Amount,
-                    Category = t.Category,
-                    Date = t.Date
-                });
-            }
+                Id = t.Id,
+                Amount = t.Amount,
+                Category = t.Category,
+                Date = t.Date
+            }).ToList();
 
             return new WalletDetailDto
             {
@@ -62,9 +57,9 @@ namespace Services
             };
         }
 
-        public TransactionDetailDto GetTransactionDetails(Guid transactionId)
+        public async Task<TransactionDetailDto> GetTransactionDetailsAsync(Guid transactionId)
         {
-            var dbTransaction = _repository.GetTransactionById(transactionId);
+            var dbTransaction = await _repository.GetTransactionByIdAsync(transactionId);
             if (dbTransaction == null) return null;
 
             return new TransactionDetailDto
@@ -73,8 +68,31 @@ namespace Services
                 Amount = dbTransaction.Amount,
                 Category = dbTransaction.Category,
                 Date = dbTransaction.Date,
-                Description = dbTransaction.Description 
+                Description = dbTransaction.Description
             };
+        }
+
+
+        public async Task AddWalletAsync(string name, Currency currency)
+        {
+            var newWallet = new WalletStorageModel(Guid.NewGuid(), name, currency);
+            await _repository.AddWalletAsync(newWallet);
+        }
+
+        public async Task UpdateWalletAsync(Guid id, string name, Currency currency)
+        {
+            var wallet = await _repository.GetWalletByIdAsync(id);
+            if (wallet != null)
+            {
+                wallet.Name = name;
+                wallet.Currency = currency;
+                await _repository.UpdateWalletAsync(wallet);
+            }
+        }
+
+        public async Task DeleteWalletAsync(Guid id)
+        {
+            await _repository.DeleteWalletAsync(id);
         }
     }
 }
