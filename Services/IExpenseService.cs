@@ -15,5 +15,8 @@ namespace Services
         Task AddWalletAsync(string name, Currency currency);
         Task UpdateWalletAsync(Guid id, string name, Currency currency);
         Task DeleteWalletAsync(Guid id);
+        Task AddTransactionAsync(Guid walletId, decimal amount, ExpenseCategory category, string description);
+        Task UpdateTransactionAsync(Guid transactionId, decimal amount, ExpenseCategory category, string description);
+        Task DeleteTransactionAsync(Guid transactionId);
     }
 }

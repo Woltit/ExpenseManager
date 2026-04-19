@@ -94,5 +94,27 @@ namespace Services
         {
             await _repository.DeleteWalletAsync(id);
         }
+        public async Task AddTransactionAsync(Guid walletId, decimal amount, ExpenseCategory category, string description)
+        {
+            var newTx = new TransactionStorageModel(Guid.NewGuid(), walletId, amount, category, description, DateTime.Now);
+            await _repository.AddTransactionAsync(newTx);
+        }
+
+        public async Task UpdateTransactionAsync(Guid transactionId, decimal amount, ExpenseCategory category, string description)
+        {
+            var tx = await _repository.GetTransactionByIdAsync(transactionId);
+            if (tx != null)
+            {
+                tx.Amount = amount;
+                tx.Category = category;
+                tx.Description = description;
+                await _repository.UpdateTransactionAsync(tx);
+            }
+        }
+
+        public async Task DeleteTransactionAsync(Guid transactionId)
+        {
+            await _repository.DeleteTransactionAsync(transactionId);
+        }
     }
 }
