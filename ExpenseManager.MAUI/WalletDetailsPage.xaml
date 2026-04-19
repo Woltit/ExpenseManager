@@ -3,52 +3,64 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ExpenseManager.MAUI.WalletDetailsPage"
              xmlns:viewmodels="clr-namespace:MAUI.ViewModels"
-             Title="{Binding Name}">
+             Title="{Binding Wallet.Name}">
 
-    <Grid Padding="20" RowDefinitions="Auto, Auto, Auto, Auto, *">
+    <Grid>
 
-        <Label Grid.Row="0" Text="{Binding Wallet.TotalAmount, StringFormat='Поточний баланс: {0}'}" FontSize="22" FontAttributes="Bold" TextColor="White" Margin="0,0,0,5" />
-        <Label Grid.Row="1" Text="{Binding Wallet.Currency, StringFormat='Валюта: {0}'}" FontSize="16" />
+        <Grid Padding="20" RowDefinitions="Auto, Auto, Auto, Auto, *" IsEnabled="{Binding IsNotBusy}">
 
-        <BoxView Grid.Row="2" HeightRequest="1" Color="LightGray" Margin="0,15" />
+            <Label Grid.Row="0" Text="{Binding Wallet.TotalAmount, StringFormat='Поточний баланс: {0}'}" FontSize="22" FontAttributes="Bold" TextColor="White" Margin="0,0,0,5" />
+            <Label Grid.Row="1" Text="{Binding Wallet.Currency, StringFormat='Валюта: {0}'}" FontSize="16" />
 
-        <Label Grid.Row="3" Text="Історія транзакцій:" FontSize="18" FontAttributes="Bold" Margin="0,0,0,15" />
+            <BoxView Grid.Row="2" HeightRequest="1" Color="LightGray" Margin="0,15" />
 
-        <Button Grid.Row="3" Text="+ Додати транзакцію" Command="{Binding AddTransactionCommand}" BackgroundColor="SeaGreen" TextColor="White" Margin="0,0,0,10" HorizontalOptions="End"/>
+            <Label Grid.Row="3" Text="Історія транзакцій:" FontSize="18" FontAttributes="Bold" Margin="0,0,0,15" VerticalOptions="Center"/>
+            <Button Grid.Row="3" Text="+ Додати транзакцію" Command="{Binding AddTransactionCommand}" BackgroundColor="SeaGreen" TextColor="White" Margin="0,0,0,10" HorizontalOptions="End" VerticalOptions="Center"/>
 
-        <CollectionView Grid.Row="4"
-                        ItemsSource="{Binding Transactions}"
-                        SelectionMode="Single"
-                        SelectionChangedCommand="{Binding TransactionSelectedCommand}"
-                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Border Margin="0,0,0,10" Padding="10" BackgroundColor="#FAFAFA" Stroke="LightGray" StrokeThickness="1">
-                        <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
-                            <VerticalStackLayout Grid.Column="0">
-                                <Label Text="{Binding Category, StringFormat='Категорія: {0}'}" 
-                   FontSize="16" 
-                   FontAttributes="Bold" 
-                   TextColor="Black" />
+            <CollectionView Grid.Row="4"
+                            ItemsSource="{Binding Transactions}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedTransaction, Mode=TwoWay}"
+                            SelectionChangedCommand="{Binding TransactionSelectedCommand}"
+                            SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,0,0,10" Padding="10" BackgroundColor="#FAFAFA" Stroke="LightGray" StrokeThickness="1">
+                            <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="0">
+                                    <Label Text="{Binding Category, StringFormat='Категорія: {0}'}" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold" 
+                                           TextColor="Black" />
 
-                                <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" 
-                   FontSize="14" 
-                   TextColor="Gray" />
+                                    <Label Text="{Binding Date, StringFormat='{0:dd.MM.yyyy}'}" 
+                                           FontSize="14" 
+                                           TextColor="Gray" />
 
-                                <Label Text="{Binding Amount}" FontSize="16" FontAttributes="Bold" TextColor="Black" />
-                            </VerticalStackLayout>
+                                    <Label Text="{Binding Amount}" FontSize="16" FontAttributes="Bold" TextColor="Black" />
+                                </VerticalStackLayout>
 
-                            <Button Grid.Column="1" Text="Видалити" BackgroundColor="Transparent" TextColor="Red" 
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:WalletDetailsViewModel}}, Path=DeleteTransactionCommand}"
-                                    CommandParameter="{Binding .}" />
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                                <Button Grid.Column="1" Text="Видалити" BackgroundColor="Transparent" TextColor="Red" 
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:WalletDetailsViewModel}}, Path=DeleteTransactionCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
 
-            <CollectionView.EmptyView>
-                <Label Text="Транзакцій поки немає." FontAttributes="Italic" HorizontalOptions="Center" Margin="20"/>
-            </CollectionView.EmptyView>
-        </CollectionView>
+                <CollectionView.EmptyView>
+                    <Label Text="Транзакцій поки немає." FontAttributes="Italic" HorizontalOptions="Center" Margin="20"/>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </Grid>
+
+        <BoxView Color="Black" Opacity="0.3" IsVisible="{Binding IsBusy}" />
+        <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center" 
+                           Color="SeaGreen" 
+                           WidthRequest="50" 
+                           HeightRequest="50"/>
     </Grid>
 </ContentPage>

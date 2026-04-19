@@ -5,62 +5,80 @@
              xmlns:viewmodels="clr-namespace:MAUI.ViewModels"
              Title="Мої Гаманці">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
-        <Button Text="+ Додати новий гаманець" 
-                Command="{Binding AddWalletCommand}" 
-                BackgroundColor="DarkSlateBlue" 
-                TextColor="White" 
-                CornerRadius="8" 
-                FontAttributes="Bold"/>
+    <Grid>
 
-        <Label Text="Оберіть гаманець:" FontSize="18" FontAttributes="Bold" Margin="0,10,0,0"/>
+        <Grid RowDefinitions="Auto, Auto, *" Padding="20" RowSpacing="15" IsEnabled="{Binding IsNotBusy}">
 
-        <CollectionView x:Name="WalletsCollection" 
-                        ItemsSource="{Binding Wallets}" 
-                        SelectionMode="Single" 
-                        SelectionChangedCommand="{Binding WalletSelectedCommand}"
-                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Border Margin="0,0,0,10" Padding="15" BackgroundColor="#F3F3F3" Stroke="LightGray" StrokeThickness="1">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="8" />
-                        </Border.StrokeShape>
+            <Button Grid.Row="0"
+                    Text="+ Додати новий гаманець" 
+                    Command="{Binding AddWalletCommand}" 
+                    BackgroundColor="DarkSlateBlue" 
+                    TextColor="White" 
+                    CornerRadius="8" 
+                    FontAttributes="Bold"/>
 
-                        <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="5" VerticalOptions="Center">
+            <Label Grid.Row="1" 
+                   Text="Оберіть гаманець:" 
+                   FontSize="18" 
+                   FontAttributes="Bold" 
+                   Margin="0,10,0,0"/>
 
-                            <VerticalStackLayout Grid.Column="0">
-                                <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
-                                <Label Text="{Binding TotalAmount, StringFormat='Баланс: {0}'}" FontSize="14" TextColor="DarkSlateGray"/>
-                                <Label Text="{Binding Currency, StringFormat='Валюта: {0}'}" FontSize="14" TextColor="Gray"/>
-                            </VerticalStackLayout>
+            <CollectionView Grid.Row="2"
+                            x:Name="WalletsCollection" 
+                            ItemsSource="{Binding Wallets}" 
+                            SelectionMode="Single" 
+                            SelectionChangedCommand="{Binding WalletSelectedCommand}"
+                            SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,0,0,10" Padding="15" BackgroundColor="#F3F3F3" Stroke="LightGray" StrokeThickness="1">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="8" />
+                            </Border.StrokeShape>
 
-                            <Button Grid.Column="1" 
-                                    Text="Редагувати" 
-                                    BackgroundColor="Transparent" 
-                                    TextColor="Blue" 
-                                    FontSize="14"
-                                    Padding="10,5"
-                                    VerticalOptions="Center"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=EditWalletCommand}"
-                                    CommandParameter="{Binding .}" />
+                            <Grid ColumnDefinitions="*, Auto, Auto" ColumnSpacing="5" VerticalOptions="Center">
+                                <VerticalStackLayout Grid.Column="0">
+                                    <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="Black"/>
+                                    <Label Text="{Binding TotalAmount, StringFormat='Баланс: {0}'}" FontSize="14" TextColor="DarkSlateGray"/>
+                                    <Label Text="{Binding Currency, StringFormat='Валюта: {0}'}" FontSize="14" TextColor="Gray"/>
+                                </VerticalStackLayout>
 
-                            <Button Grid.Column="2" 
-                                    Text="Видалити" 
-                                    BackgroundColor="Transparent" 
-                                    TextColor="Red" 
-                                    FontSize="14"
-                                    Padding="10,5"
-                                    VerticalOptions="Center"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=DeleteWalletCommand}"
-                                    CommandParameter="{Binding .}" />
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-            <CollectionView.EmptyView>
-                <Label Text="У вас ще немає гаманців. Створіть перший!" FontAttributes="Italic" HorizontalOptions="Center" Margin="20"/>
-            </CollectionView.EmptyView>
-        </CollectionView>
-    </VerticalStackLayout>
+                                <Button Grid.Column="1" 
+                                        Text="Редагувати" 
+                                        BackgroundColor="Transparent" 
+                                        TextColor="Blue" 
+                                        FontSize="14"
+                                        Padding="10,5"
+                                        VerticalOptions="Center"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=EditWalletCommand}"
+                                        CommandParameter="{Binding .}" />
+
+                                <Button Grid.Column="2" 
+                                        Text="Видалити" 
+                                        BackgroundColor="Transparent" 
+                                        TextColor="Red" 
+                                        FontSize="14"
+                                        Padding="10,5"
+                                        VerticalOptions="Center"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:MainViewModel}}, Path=DeleteWalletCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Label Text="У вас ще немає гаманців. Створіть перший!" FontAttributes="Italic" HorizontalOptions="Center" Margin="20"/>
+                </CollectionView.EmptyView>
+            </CollectionView>
+        </Grid>
+
+        <BoxView Color="Black" Opacity="0.3" IsVisible="{Binding IsBusy}" />
+        <ActivityIndicator IsRunning="{Binding IsBusy}" 
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center" 
+                           Color="DarkSlateBlue" 
+                           WidthRequest="50" 
+                           HeightRequest="50"/>
+    </Grid>
 </ContentPage>

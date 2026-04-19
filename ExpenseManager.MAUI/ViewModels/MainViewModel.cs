@@ -31,7 +31,7 @@ namespace MAUI.ViewModels
                 var detailsViewModel = new WalletDetailsViewModel(walletDetails, _expenseService);
 
                 await Application.Current.Windows[0].Page.Navigation.PushAsync(new WalletDetailsPage(detailsViewModel));
-            }); 
+            });
 
             // Команда додавання гаманця
             AddWalletCommand = new Command(async () =>
@@ -76,13 +76,26 @@ namespace MAUI.ViewModels
                     await LoadDataAsync();
                 }
             });
-        } 
+        }
 
         public async Task LoadDataAsync()
         {
-            var wallets = await _expenseService.GetAllWalletsAsync();
-            Wallets = new ObservableCollection<WalletListDto>(wallets);
-            OnPropertyChanged(nameof(Wallets));
+            if (IsBusy) return; 
+
+            try
+            {
+                IsBusy = true;
+
+                await Task.Delay(1000); 
+
+                var wallets = await _expenseService.GetAllWalletsAsync();
+                Wallets = new ObservableCollection<WalletListDto>(wallets);
+                OnPropertyChanged(nameof(Wallets));
+            }
+            finally
+            {
+                IsBusy = false; 
+            }
         }
     }
 }
