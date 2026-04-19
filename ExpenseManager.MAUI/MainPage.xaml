@@ -7,9 +7,10 @@
     <VerticalStackLayout Padding="20" Spacing="15">
         <Label Text="Оберіть гаманець:" FontSize="18" FontAttributes="Bold" />
 
-        <CollectionView x:Name="WalletsCollection" 
+        <CollectionView ItemsSource="{Binding Wallets}" 
                         SelectionMode="Single" 
-                        SelectionChanged="OnWalletSelected">
+                        SelectionChangedCommand="{Binding WalletSelectedCommand}"
+                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Border Margin="0,0,0,10" 

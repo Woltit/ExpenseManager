@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using Services; 
+﻿using ExpenseManager.MAUI.ViewModels;     
+using Services;
+using Storage.Repositories; 
 
 namespace ExpenseManager.MAUI
 {
@@ -16,12 +17,16 @@ namespace ExpenseManager.MAUI
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-#if DEBUG
-            builder.Logging.AddDebug();
-#endif
-          
+            // 1. Реєструємо Репозиторій 
+            builder.Services.AddSingleton<IExpenseRepository, ExpenseRepository>();
+
+            // 2. Реєструємо Сервіс 
             builder.Services.AddSingleton<IExpenseService, ExpenseService>();
 
+            // 3. Реєструємо ViewModels 
+            builder.Services.AddTransient<MainViewModel>();
+
+            // 4. Реєструємо Головну сторінку
             builder.Services.AddTransient<MainPage>();
 
             return builder.Build();

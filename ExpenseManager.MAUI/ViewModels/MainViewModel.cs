@@ -28,7 +28,7 @@ namespace ExpenseManager.MAUI.ViewModels
 
                 var detailsViewModel = new WalletDetailsViewModel(walletDetails, _expenseService);
 
-                await Application.Current.MainPage.Navigation.PushAsync(new WalletDetailsPage(detailsViewModel));
+                await Application.Current.Windows[0].Page.Navigation.PushAsync(new WalletDetailsPage(detailsViewModel));
             });
         }
     }

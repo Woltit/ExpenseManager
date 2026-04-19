@@ -6,18 +6,18 @@
 
     <Grid Padding="20" RowDefinitions="Auto, Auto, Auto, Auto, *">
 
-        <Label Grid.Row="0" Text="{Binding TotalAmount, StringFormat='Поточний баланс: {0}'}" FontSize="22" FontAttributes="Bold" TextColor="DarkGreen" Margin="0,0,0,5" />
-        <Label Grid.Row="1" Text="{Binding Currency, StringFormat='Валюта: {0}'}" FontSize="16" />
+        <Label Grid.Row="0" Text="{Binding Wallet.TotalAmount, StringFormat='Поточний баланс: {0}'}" FontSize="22" FontAttributes="Bold" TextColor="DarkGreen" Margin="0,0,0,5" />
+        <Label Grid.Row="1" Text="{Binding Wallet.Currency, StringFormat='Валюта: {0}'}" FontSize="16" />
 
         <BoxView Grid.Row="2" HeightRequest="1" Color="LightGray" Margin="0,15" />
 
         <Label Grid.Row="3" Text="Історія транзакцій:" FontSize="18" FontAttributes="Bold" Margin="0,0,0,15" />
 
         <CollectionView Grid.Row="4"
-                        x:Name="TransactionsCollection" 
                         ItemsSource="{Binding Transactions}"
                         SelectionMode="Single"
-                        SelectionChanged="OnTransactionSelected">
+                        SelectionChangedCommand="{Binding TransactionSelectedCommand}"
+                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Border Margin="0,0,0,10" Padding="15" BackgroundColor="#FAFAFA" Stroke="LightGray" StrokeThickness="1">

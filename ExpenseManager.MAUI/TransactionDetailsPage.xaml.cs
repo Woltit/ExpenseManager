@@ -1,16 +1,15 @@
+using ExpenseManager.MAUI.ViewModels;
+using MAUI.ViewModels;
 using Microsoft.Maui.Controls;
-using Models;
 
 namespace ExpenseManager.MAUI
 {
     public partial class TransactionDetailsPage : ContentPage
     {
-        public TransactionDetailsPage(TransactionModel transaction)
+        public TransactionDetailsPage(TransactionDetailsViewModel viewModel)
         {
             InitializeComponent();
-
-            // Прив'язуємо дані обраної транзакції до інтерфейсу
-            BindingContext = transaction;
+            BindingContext = viewModel;
         }
     }
 }

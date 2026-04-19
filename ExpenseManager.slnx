@@ -1,5 +1,4 @@
 <Solution>
-  <Project Path="ConsoleUI/ConsoleUI.csproj" Id="3a7744e3-816d-4ee8-a1cd-05963baa7753" />
   <Project Path="ExpenseManager.MAUI/ExpenseManager.MAUI.csproj" Id="6b06f1c0-9314-46dc-8e70-dffc4fba0cce">
     <Deploy Solution="Debug|*" />
   </Project>
