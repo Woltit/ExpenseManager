@@ -8,5 +8,6 @@ namespace Storage.Repositories
     {
         List<WalletStorageModel> GetAllWallets();
         List<TransactionStorageModel> GetTransactionsByWalletId(Guid walletId);
+        TransactionStorageModel GetTransactionById(Guid id);
     }
 }

@@ -16,5 +16,10 @@ namespace Storage.Repositories
                 .Where(t => t.WalletId == walletId)
                 .ToList();
         }
+
+        public TransactionStorageModel GetTransactionById(Guid id)
+        {
+            return StorageTemplate.Transactions.FirstOrDefault(t => t.Id == id);
+        }
     }
 }

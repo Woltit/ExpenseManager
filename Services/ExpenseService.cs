@@ -1,54 +1,80 @@
-﻿using Storage;
-using Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Models.DTOs;
+using Storage.Repositories; 
+
 
 namespace Services
 {
     public class ExpenseService : IExpenseService
     {
+        private readonly IExpenseRepository _repository;
 
-        public List<WalletModel> GetAllWallets()
+        public ExpenseService(IExpenseRepository repository)
         {
-            var storageWallets = StorageTemplate.Wallets;
-            var modelWallets = new List<WalletModel>();
-
-            foreach (var wallet in storageWallets)
-            {
-                var modelWallet = new WalletModel
-                {
-                    Id = wallet.Id,
-                    Name = wallet.Name,
-                    Currency = wallet.Currency,
-                    Transactions = GetWalletTransactions(wallet.Id)
-
-                };
-                modelWallets.Add(modelWallet);
-            }
-            return modelWallets;
+            _repository = repository;
         }
 
-        public List<TransactionModel> GetWalletTransactions(Guid walletId)
+        public List<WalletListDto> GetAllWallets()
         {
-            var storageTransactions = StorageTemplate.Transactions
-                .Where(t => t.WalletId == walletId).ToList();
+            var dbWallets = _repository.GetAllWallets();
+            var dtoList = new List<WalletListDto>();
 
-            var modelTransactions = new List<TransactionModel>();
-
-            foreach (var storageTransaction in storageTransactions)
+            foreach (var w in dbWallets)
             {
-                modelTransactions.Add( new TransactionModel
+                var transactions = _repository.GetTransactionsByWalletId(w.Id);
+
+                dtoList.Add(new WalletListDto
                 {
-                    Id = storageTransaction.Id,
-                    WalletId = storageTransaction.WalletId,
-                    Amount = storageTransaction.Amount,
-                    Category = storageTransaction.Category,
-                    Description = storageTransaction.Description,
-                    Date = storageTransaction.Date
+                    Id = w.Id,
+                    Name = w.Name,
+                    Currency = w.Currency,
+                    TotalAmount = transactions.Sum(t => t.Amount)
                 });
             }
-            return modelTransactions;
+            return dtoList;
+        }
+
+        public WalletDetailDto GetWalletDetails(Guid walletId)
+        {
+            var dbWallet = _repository.GetAllWallets().FirstOrDefault(w => w.Id == walletId);
+            if (dbWallet == null) return null;
+
+            var dbTransactions = _repository.GetTransactionsByWalletId(walletId);
+            var transactionDtos = new List<TransactionListDto>();
+
+            foreach (var t in dbTransactions)
+            {
+                transactionDtos.Add(new TransactionListDto
+                {
+                    Id = t.Id,
+                    Amount = t.Amount,
+                    Category = t.Category,
+                    Date = t.Date
+                });
+            }
+
+            return new WalletDetailDto
+            {
+                Id = dbWallet.Id,
+                Name = dbWallet.Name,
+                Currency = dbWallet.Currency,
+                TotalAmount = dbTransactions.Sum(t => t.Amount),
+                Transactions = transactionDtos
+            };
+        }
+
+        public TransactionDetailDto GetTransactionDetails(Guid transactionId)
+        {
+            var dbTransaction = _repository.GetTransactionById(transactionId);
+            if (dbTransaction == null) return null;
+
+            return new TransactionDetailDto
+            {
+                Id = dbTransaction.Id,
+                Amount = dbTransaction.Amount,
+                Category = dbTransaction.Category,
+                Date = dbTransaction.Date,
+                Description = dbTransaction.Description 
+            };
         }
     }
 }
